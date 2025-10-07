@@ -4,13 +4,17 @@ Title: What the Package Does (Title Case)
 Version: 0.1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
+      "Hannah", "Köster",
+      email = "hanko154@student.liu.se",
       role = c("aut", "cre")
+    ),
+    person(
+      "Rukmini Shipra", "Sundaraneedi",
+      email = "ruksu271@student.liu.se",
+      role = "aut"
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
+Description: Fullfills the requirements of lab 6 of the Advanced programming in R course (HT2025).
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -20,3 +24,4 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+RoxygenNote: 7.3.3
