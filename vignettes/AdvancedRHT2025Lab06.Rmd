@@ -1,0 +1,19 @@
+---
+title: "AdvancedRHT2025Lab06"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{AdvancedRHT2025Lab06}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(AdvancedRHT2025Lab06)
+```
