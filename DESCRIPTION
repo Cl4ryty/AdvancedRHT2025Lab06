@@ -18,6 +18,8 @@ Description: Fullfills the requirements of lab 6 of the Advanced programming in 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Imports:
+    microbenchmark
 Suggests: 
     knitr,
     rmarkdown,
