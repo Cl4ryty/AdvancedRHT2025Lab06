@@ -38,12 +38,13 @@ brute_force_knapsack_ <- function(x, W, parallel=FALSE){
   values <- rep(-Inf, n)
   weights <- rep(Inf, n)
   if(parallel){
-    values <- parallel::mclapply(bit_matrix, 1, function(row){
-      sum(x$v[row==1])
-    })
-    weights <- parallel::mclapply(bit_matrix, 1, function(row){
-      sum(x$w[row==1])
-    })
+    cores <- parallel::detectCores()
+    values <- unlist(parallel::mclapply(1:nrow(bit_matrix), function(i) {
+      sum(x$v[bit_matrix[i,]==1])
+    }, mc.cores=cores))
+    weights <- unlist(parallel::mclapply(1:nrow(bit_matrix), function(i) {
+      sum(x$w[bit_matrix[i,]==1])
+    }, mc.cores=cores))
   }else{
     values <- apply(bit_matrix, 1, function(row){
       sum(x$v[row==1])
@@ -98,22 +99,22 @@ brute_force_knapsack <- function(x, W, parallel=FALSE){
 
   # get vector of numbers 1:2^n
   n <- nrow(x)
-  numbers <- c(1:2^n)
   # get binary representations
-  binary <- intToBits(numbers)
-  bit_matrix <- matrix(binary, ncol = length(binary)/length(numbers), byrow=TRUE)
+  binary <- intToBits(c(1:2^n))
+  bit_matrix <- matrix(binary, ncol = length(binary)/(2^n), byrow=TRUE)
   # get only the columns relevant for us
   bit_matrix <- bit_matrix[,1:n]
 
   values <- rep(-Inf, n)
   weights <- rep(Inf, n)
   if(parallel){
-    values <- parallel::mclapply(bit_matrix, 1, function(row){
-      sum(x$v[row==1])
-    })
-    weights <- parallel::mclapply(bit_matrix, 1, function(row){
-      sum(x$w[row==1])
-    })
+    cores <- parallel::detectCores()
+    values <- unlist(parallel::mclapply(1:nrow(bit_matrix), function(i) {
+      sum(x$v[bit_matrix[i,]==1])
+    }, mc.cores=cores))
+    weights <- unlist(parallel::mclapply(1:nrow(bit_matrix), function(i) {
+      sum(x$w[bit_matrix[i,]==1])
+    }, mc.cores=cores))
   }else{
     t <- matrix(rep(x$v, 2^n), ncol=n, byrow=TRUE)
     t[bit_matrix!=1] <- 0
