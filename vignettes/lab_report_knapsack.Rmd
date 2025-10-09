@@ -21,9 +21,7 @@ library(microbenchmark)
 
 ## generate knapsack
 ```{r}
-RNGversion(min(as.character(getRversion()),"3.5.3"))
-##old sampler used for backward compatibility
-## suppressWarnings() can be used so that the above warning is not displayed
+suppressWarnings(RNGversion(min(as.character(getRversion()),"3.5.3")))
 set.seed(42, kind = "Mersenne-Twister", normal.kind = "Inversion")
 n <- 1000000
 knapsack_objects <- data.frame(w = sample(1:4000, size = n, replace = TRUE),
@@ -41,7 +39,7 @@ microbenchmark(brute_force_knapsack(x = knapsack_objects[1:16,], W = 3500))
 How much time does it takes to run the algorithm for n = 500 objects?
 ```{r}
 microbenchmark(knapsack_dynamic(x = knapsack_objects[1:16,], W = 3500))
-microbenchmark(knapsack_dynamic(x = knapsack_objects[1:500,], W = 3500))
+# microbenchmark(knapsack_dynamic(x = knapsack_objects[1:500,], W = 3500))
 
 ```
 
@@ -61,7 +59,6 @@ What performance gain could you get by trying to improving your code?
 We could improve brute-force knapsack to run around 10x faster than before (although the initial implementation was chosen because it was quicker to implement even though it was obviously not efficient). 
 
 ```{r}
-
 microbenchmark(brute_force_knapsack_(x = knapsack_objects[1:16,], W = 3500))
 microbenchmark(brute_force_knapsack(x = knapsack_objects[1:16,], W = 3500))
 ```
@@ -69,7 +66,11 @@ microbenchmark(brute_force_knapsack(x = knapsack_objects[1:16,], W = 3500))
 ## 1.1.8 Parallelize brute force search
 What performance gain could you get by parallelizing brute force search?
 ```{r}
+microbenchmark(brute_force_knapsack_(x = knapsack_objects[1:16,], W = 3500))
+microbenchmark(brute_force_knapsack_(x = knapsack_objects[1:16,], W = 3500), parallel=TRUE)
+
+
 microbenchmark(brute_force_knapsack(x = knapsack_objects[1:16,], W = 3500))
-# microbenchmark(brute_force_knapsack(x = knapsack_objects[1:16,], W = 3500), parallel=TRUE)
+microbenchmark(brute_force_knapsack(x = knapsack_objects[1:16,], W = 3500), parallel=TRUE)
 
 ```

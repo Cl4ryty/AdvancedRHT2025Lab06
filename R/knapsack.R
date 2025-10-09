@@ -35,8 +35,6 @@ brute_force_knapsack_ <- function(x, W, parallel=FALSE){
   # get only the columns relevant for us
   bit_matrix <- bit_matrix[,1:n]
 
-  values <- rep(-Inf, n)
-  weights <- rep(Inf, n)
   if(parallel){
     values <- unlist(parallel::mclapply(1:nrow(bit_matrix), function(i){
       sum(x$v[bit_matrix[i,]==1])
@@ -52,7 +50,6 @@ brute_force_knapsack_ <- function(x, W, parallel=FALSE){
       sum(x$w[row==1])
     })
   }
-
 
   # set values with too high weights to negative infinity
   values[weights > W] = -Inf
@@ -98,30 +95,29 @@ brute_force_knapsack <- function(x, W, parallel=FALSE){
 
   # get vector of numbers 1:2^n
   n <- nrow(x)
-  numbers <- c(1:2^n)
   # get binary representations
-  binary <- intToBits(numbers)
-  bit_matrix <- matrix(binary, ncol = length(binary)/length(numbers), byrow=TRUE)
+  binary <- intToBits(c(1:2^n))
+  bit_matrix <- matrix(binary, ncol = length(binary)/(2^n), byrow=TRUE)
   # get only the columns relevant for us
   bit_matrix <- bit_matrix[,1:n]
 
   values <- rep(-Inf, 2^n)
   weights <- rep(Inf, 2^n)
   if(parallel){
+    cores <- parallel::detectCores()
     if(.Platform$OS.type == "unix") {
       # Unix/Linux/Mac: Use mclapply (forking - fast)
       values <- unlist(parallel::mclapply(1:nrow(bit_matrix), function(i){
         sum(x$v[bit_matrix[i,]==1])
-      }, mc.cores = parallel::detectCores()))
+      }, mc.cores = cores))
 
       weights <- unlist(parallel::mclapply(1:nrow(bit_matrix), function(i){
         sum(x$w[bit_matrix[i,]==1])
-      }, mc.cores = parallel::detectCores()))
+      }, mc.cores = cores))
 
     } else {
       # Windows: Use parLapply (sockets - slower)
-      num_cores <- parallel::detectCores()
-      cl <- parallel::makeCluster(num_cores)
+      cl <- parallel::makeCluster(cores)
 
       # Export necessary objects to cluster
       parallel::clusterExport(cl, c("x", "bit_matrix"), envir=environment())
@@ -261,16 +257,6 @@ greedy_knapsack <- function(x, W){
 
   value=sum(x$v[x$cumsum>-Inf])
   elements = sort(x$i[x$cumsum>-Inf])
-  # weight_left = W-sum(x$w[x$cumsum>-Inf])
-  # x$w[x$cumsum>-Inf] <- Inf
-#
-#   while(any(x$w<=weight_left)){
-#     greedy_index <- where(x$w<=weight_left)[1]
-#     value <- x$v[greedy_index]
-#     elements <-  c(elements, x$i[greedy_index])
-#     weight_left <- weight_left-x$w[greedy_index]
-#     x$w[greedy_index] <- -Inf
-#   }
   return(list(value=round(value), elements=elements))
 
 }
