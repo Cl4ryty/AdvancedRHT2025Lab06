@@ -38,7 +38,7 @@ brute_force_knapsack_ <- function(x, W, parallel=FALSE){
   values <- rep(-Inf, n)
   weights <- rep(Inf, n)
   if(parallel){
-    cores <- parallel::detectCores()
+    cores <- parallelly::availableCores()
     values <- unlist(parallel::mclapply(1:nrow(bit_matrix), function(i) {
       sum(x$v[bit_matrix[i,]==1])
     }, mc.cores=cores))
@@ -108,7 +108,7 @@ brute_force_knapsack <- function(x, W, parallel=FALSE){
   values <- rep(-Inf, n)
   weights <- rep(Inf, n)
   if(parallel){
-    cores <- parallel::detectCores()
+    cores <- parallelly::availableCores()
     values <- unlist(parallel::mclapply(1:nrow(bit_matrix), function(i) {
       sum(x$v[bit_matrix[i,]==1])
     }, mc.cores=cores))
